@@ -1,5 +1,7 @@
 import { fetchBreeds, fetchCatByBreed } from './js/cat-api';
 import { refs } from './js/refs';
+import SlimSelect from 'slim-select';
+refs.selectCatEl.classList.add('is-hidden');
 fetchBreeds()
   .then(response => {
     const markup = response.data
@@ -13,12 +15,13 @@ fetchBreeds()
       .join('');
     return markup;
   })
+
   .then(data => {
     refs.selectCatEl.insertAdjacentHTML('beforeend', data);
   })
-  .finally(() => refs.loaderEl.classList.add('is-hidden'));
 
-// fetchCatByBreed('abys');
+  .finally(() => refs.loaderEl.classList.add('is-hidden'))
+  .finally(() => refs.selectCatEl.classList.remove('is-hidden'));
 
 refs.selectCatEl.addEventListener('change', event => {
   fetchCatByBreed(event.target.value)
@@ -31,7 +34,7 @@ refs.selectCatEl.addEventListener('change', event => {
         .map(item => {
           console.log(item);
           return `
-            <div>
+            <div class = "div-image">
             <img src= ${item.url}>
             <h3>${item.breeds[0].name}</h3>
             <p>${item.breeds[0].temperament}</p>
@@ -43,5 +46,6 @@ refs.selectCatEl.addEventListener('change', event => {
       return markup;
     })
     .then(data => (refs.catInfoEl.innerHTML = data))
+
     .finally(() => refs.loaderEl.classList.add('is-hidden'));
 });
